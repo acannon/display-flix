@@ -18,4 +18,13 @@ public class Movie {
     boolean adult;
     String overview;
     String release_date;
+    String trailer;
+    String tagline;
+
+
+
+    String getTrailerLink(int id) {
+        String videoID = Model.getFirstTrailer(id);
+        return "https://www.themoviedb.org/movie/" + id +"#play=" + videoID;
+    }
 }

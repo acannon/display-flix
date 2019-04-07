@@ -5,18 +5,33 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<HBox fx:controller="core.SearchController" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="65.0" prefWidth="500.0" spacing="10.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="581.0" spacing="10.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="core.SearchController">
    <children>
       <Label alignment="CENTER" prefHeight="35.0" prefWidth="146.0" text="Enter Movie Title:">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField prefHeight="43.0" prefWidth="244.0" fx:id="searchBox"/>
-      <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="74.0" text="Go!" onAction="#searchButton" fx:id="searchButton"/>
+      <VBox prefHeight="143.0" prefWidth="293.0">
+         <children>
+            <TextField fx:id="searchBox" alignment="CENTER" prefHeight="43.0" prefWidth="232.0" translateY="10.0">
+               <opaqueInsets>
+                  <Insets top="10.0" />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </VBox.margin>
+            </TextField>
+            <Label fx:id="searchErrorLabel" prefHeight="28.0" prefWidth="230.0" text="Movie not found" textFill="RED" translateX="20.0" translateY="-5.0" visible="false" />
+         </children>
+         <opaqueInsets>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </opaqueInsets>
+      </VBox>
+      <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButton" prefHeight="29.0" prefWidth="74.0" text="Go!" />
    </children>
    <padding>
       <Insets left="10.0" right="10.0" />

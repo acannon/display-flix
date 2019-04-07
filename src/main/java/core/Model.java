@@ -2,15 +2,6 @@ package core;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,6 +12,7 @@ public class Model {
     private static final String API_KEY = "046d7ef6f9972786ec9e2695c1f3ae39";
 
     public static Movie theMovie;
+    public static VideoResponse trailer;
 
     // method that takes in a url for an HTTP request, and returns the response as a string
     static String makeRequest(String urlString) {
@@ -56,31 +48,54 @@ public class Model {
     static Movie getMovie(String title) {
         // get the API response
         String httpRequest = "https://api.themoviedb.org/3/search/movie?api_key=" + API_KEY + "&language=en-US&query=" + title + "&page=1&include_adult=true";
+        httpRequest = httpRequest.replaceAll(" ","%20");
         String response = makeRequest(httpRequest);
 
         // take String response and deserialize into Java object
         Movie movie = setMovie(response);
 
-        return movie;
+        if(movie == null)
+            return null;
+        else
+            return movie;
     }
 
     // result from search has less info than a full "get movie" API request
     // this method makes the get movie request to create a movie object
     static Movie setMovie(String responseString) {
-        // put full search response into SearchResponse object - later this could be used to look through results
-        Gson gson = new Gson();
-        SearchResponse searchResponseObj = gson.fromJson(responseString, SearchResponse.class);
+        // put full search response into MovieSearchResponse object - later this could be used to look through results
+        String catName = "Hudson";
 
-        // get movie from API
-        int movieID = searchResponseObj.results.get(0).id;  // get(0) gets first result, can refine this
-        String request = "https://api.themoviedb.org/3/movie/" + movieID + "?api_key=" + API_KEY + "&language=en-US";
+        Gson gson = new Gson();
+        MovieSearchResponse searchResponseObj = gson.fromJson(responseString, MovieSearchResponse.class);
+
+        if (searchResponseObj.total_results == 0) {
+            return null;
+        }
+
+        else {
+            // get movie from API
+            int movieID = searchResponseObj.results.get(0).id;  // get(0) gets first result, can refine this
+            String request = "https://api.themoviedb.org/3/movie/" + movieID + "?api_key=" + API_KEY + "&language=en-US";
+            String response = makeRequest(request);
+
+            Movie movie = gson.fromJson(response, Movie.class);
+
+            // set title in Display Scene
+            //setMovieTitle(movie);
+
+            return movie;
+        }
+    }
+
+    // get video JSON and return video ID
+    static String getFirstTrailer(int movieID) {
+        String request = "https://api.themoviedb.org/3/movie/" + movieID + "/videos" + "?api_key=" + API_KEY + "&language=en-US";
         String response = makeRequest(request);
 
-        Movie movie = gson.fromJson(response, Movie.class);
+        Gson gson = new Gson();
+        trailer = gson.fromJson(response, VideoResponse.class);
 
-        // set title in Display Scene
-        //setMovieTitle(movie);
-
-        return movie;
+        return trailer.results.get(0).key;
     }
 }

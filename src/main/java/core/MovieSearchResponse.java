@@ -2,7 +2,7 @@ package core;
 
 import java.util.List;
 
-public class SearchResponse {
+public class MovieSearchResponse {
     int page;
     int total_results;
     List<PossibleMatch> results;
